@@ -11,7 +11,6 @@ app.get('/warp', (req, res) => {
       return res.status(500).send(`Ошибка: ${stderr}`);
     }
 
-    // Извлечение ссылки на скачивание конфига
     const downloadLink = stdout.match(/https:\/\/immalware\.github\.io\/downloader\.html\?filename=WARP\.conf&content=[A-Za-z0-9+/=]+/);
 
     if (downloadLink) {
@@ -22,6 +21,7 @@ app.get('/warp', (req, res) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log('Сервер запущен на порту 3000');
+const port = process.env.PORT || 3000;  // Используем переменную окружения PORT
+app.listen(port, () => {
+  console.log(`Сервер запущен на порту ${port}`);
 });
