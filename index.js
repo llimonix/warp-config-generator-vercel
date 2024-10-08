@@ -3,11 +3,17 @@ const { getWarpConfigLink } = require('./warpConfig');
 const app = express();
 
 app.get('/warp', async (req, res) => {
-    const link = await getWarpConfigLink();
-    if (link) {
-        res.send(`Генерация конфига завершена. Скачать конфиг можно по ссылке: ${link}`);
-    } else {
-        res.status(500).send('Не удалось сгенерировать конфиг.');
+    try {
+        const link = await getWarpConfigLink();
+        if (link) {
+            // Если генерация прошла успешно, делаем редирект на ссылку для скачивания
+            res.redirect(link);
+        } else {
+            res.status(500).send('Не удалось сгенерировать конфиг.');
+        }
+    } catch (error) {
+        console.error('Ошибка при обработке запроса:', error);
+        res.status(500).send('Произошла ошибка на сервере.');
     }
 });
 
