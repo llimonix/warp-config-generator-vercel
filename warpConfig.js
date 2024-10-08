@@ -1,13 +1,15 @@
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const curve25519 = require('curve25519-n');
 
-// Функция для генерации приватного и публичного ключа
+// Функция для генерации приватного и публичного ключа с использованием curve25519
 function generateKeys() {
-    const privKey = crypto.randomBytes(32).toString('base64');
-    const pubKey = crypto.createECDH('curve25519');
-    pubKey.setPrivateKey(Buffer.from(privKey, 'base64'));
-    const publicKey = pubKey.getPublicKey().toString('base64');
-    return { privKey, publicKey };
+    const privKey = crypto.randomBytes(32);
+    const pubKey = curve25519.publicKey(privKey);
+    return {
+        privKey: privKey.toString('base64'),
+        pubKey: pubKey.toString('base64')
+    };
 }
 
 // Функция для отправки запросов к API Cloudflare
@@ -35,13 +37,13 @@ async function apiRequest(method, endpoint, body = null, token = null) {
 }
 
 async function generateWarpConfig() {
-    const { privKey, publicKey } = generateKeys();
+    const { privKey, pubKey } = generateKeys();
 
     // Регистрация устройства
     const regBody = {
         install_id: "",
         tos: new Date().toISOString(),
-        key: publicKey,
+        key: pubKey,
         fcm_token: "",
         type: "ios",
         locale: "en_US"
