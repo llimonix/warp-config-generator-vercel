@@ -1,16 +1,20 @@
 const fetch = require('node-fetch');
-const crypto = require('crypto');
+const { execSync } = require('child_process');
+const { Buffer } = require('buffer');
 
-const api = "https://api.cloudflareclient.com/v0i1909051800";
+// Функция для выполнения команд оболочки
+function execCommand(command) {
+    return execSync(command).toString().trim();
+}
 
-// Функция для генерации приватного и публичного ключа
+// Генерация приватного и публичного ключа с помощью WireGuard
 function generateKeys() {
-    const privKey = crypto.randomBytes(32).toString('base64');
-    const pubKey = crypto.createECDH('secp256k1').generateKeys('base64');
+    const privKey = execCommand('wg genkey');
+    const pubKey = execCommand(`echo ${privKey} | wg pubkey`);
     return { privKey, pubKey };
 }
 
-// Функция для отправки запросов на API
+// Функция для отправки запросов к API Cloudflare
 async function apiRequest(method, endpoint, body = null, token = null) {
     const headers = {
         'User-Agent': '',
@@ -30,7 +34,7 @@ async function apiRequest(method, endpoint, body = null, token = null) {
         options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(`${api}/${endpoint}`, options);
+    const response = await fetch(`https://api.cloudflareclient.com/v0i1909051800/${endpoint}`, options);
     return response.json();
 }
 
@@ -55,10 +59,13 @@ async function generateWarpConfig() {
     const warpResponse = await apiRequest('PATCH', `reg/${id}`, { warp_enabled: true }, token);
 
     const peer_pub = warpResponse.result.config.peers[0].public_key;
-    const peer_endpoint = warpResponse.result.config.peers[0].endpoint.host;
+    let peer_endpoint = warpResponse.result.config.peers[0].endpoint.host;
     const client_ipv4 = warpResponse.result.config.interface.addresses.v4;
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
-    const port = peer_endpoint.match(/:(\d+)$/)[1];
+    const port = peer_endpoint.split(':').pop();
+
+    // Заменяем хост в endpoint на 162.159.193.5
+    peer_endpoint = '162.159.193.5';
 
     // Формируем конфиг
     const conf = `
@@ -79,14 +86,14 @@ DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 [Peer]
 PublicKey = ${peer_pub}
 AllowedIPs = 0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1
-Endpoint = 162.159.193.5:${port}
+Endpoint = ${peer_endpoint}:${port}
 `;
 
     // Возвращаем конфиг
     return conf;
 }
 
-// Основная функция для генерации и вывода ссылки на скачивание
+// Основная функция для генерации ссылки на скачивание конфига
 async function getWarpConfigLink() {
     try {
         const conf = await generateWarpConfig();
@@ -98,4 +105,5 @@ async function getWarpConfigLink() {
     }
 }
 
+// Экспортируем функцию для использования
 module.exports = { getWarpConfigLink };
