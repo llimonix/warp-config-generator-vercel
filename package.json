@@ -10,6 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.1"
+    "crypto": "^1.0.1",
+    "express": "^4.21.1",
+    "node-fetch": "^3.3.2"
   }
 }
