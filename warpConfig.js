@@ -1,17 +1,13 @@
 const fetch = require('node-fetch');
-const { execSync } = require('child_process');
-const { Buffer } = require('buffer');
+const crypto = require('crypto');
 
-// Функция для выполнения команд оболочки
-function execCommand(command) {
-    return execSync(command).toString().trim();
-}
-
-// Генерация приватного и публичного ключа с помощью WireGuard
+// Функция для генерации приватного и публичного ключа
 function generateKeys() {
-    const privKey = execCommand('wg genkey');
-    const pubKey = execCommand(`echo ${privKey} | wg pubkey`);
-    return { privKey, pubKey };
+    const privKey = crypto.randomBytes(32).toString('base64');
+    const pubKey = crypto.createECDH('curve25519');
+    pubKey.setPrivateKey(Buffer.from(privKey, 'base64'));
+    const publicKey = pubKey.getPublicKey().toString('base64');
+    return { privKey, publicKey };
 }
 
 // Функция для отправки запросов к API Cloudflare
@@ -39,13 +35,13 @@ async function apiRequest(method, endpoint, body = null, token = null) {
 }
 
 async function generateWarpConfig() {
-    const { privKey, pubKey } = generateKeys();
+    const { privKey, publicKey } = generateKeys();
 
     // Регистрация устройства
     const regBody = {
         install_id: "",
         tos: new Date().toISOString(),
-        key: pubKey,
+        key: publicKey,
         fcm_token: "",
         type: "ios",
         locale: "en_US"
