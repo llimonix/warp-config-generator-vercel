@@ -12,6 +12,7 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "express": "^4.21.1",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "tweetnacl": "^1.0.3"
   }
 }

@@ -1,14 +1,12 @@
 const fetch = require('node-fetch');
-const crypto = require('crypto');
-const curve25519 = require('curve25519-n');
+const nacl = require('tweetnacl');
+const { Buffer } = require('buffer');
 
-// Функция для генерации приватного и публичного ключа с использованием curve25519
 function generateKeys() {
-    const privKey = crypto.randomBytes(32);
-    const pubKey = curve25519.publicKey(privKey);
+    const keyPair = nacl.box.keyPair();
     return {
-        privKey: privKey.toString('base64'),
-        pubKey: pubKey.toString('base64')
+        privKey: Buffer.from(keyPair.secretKey).toString('base64'),
+        pubKey: Buffer.from(keyPair.publicKey).toString('base64')
     };
 }
 
