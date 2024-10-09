@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@vercel/speed-insights": "^1.0.12",
     "crypto": "^1.0.1",
     "express": "^4.21.1",
     "node-fetch": "^2.7.0",
