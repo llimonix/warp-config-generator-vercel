@@ -1,10 +1,7 @@
 const express = require('express');
 const { getWarpConfigLink } = require('./warpConfig');
-const { SpeedInsightsMiddleware } = require('@vercel/speed-insights');
 
 const app = express();
-
-app.use(SpeedInsightsMiddleware());
 
 app.get('/warp', async (req, res) => {
     try {
