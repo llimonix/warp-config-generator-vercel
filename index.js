@@ -15,9 +15,9 @@ app.get('/', (req, res) => {
 // Маршрут для генерации конфига
 app.get('/warp', async (req, res) => {
     try {
-        const link = await getWarpConfigLink();
-        if (link) {
-            res.json({ success: true, link });
+        const content = await getWarpConfigLink();
+        if (content) {
+            res.json({ success: true, content });
         } else {
             res.status(500).json({ success: false, message: 'Не удалось сгенерировать конфиг.' });
         }
