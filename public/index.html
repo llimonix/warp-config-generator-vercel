@@ -84,23 +84,23 @@
                     const downloadFile = () => {
                         const link = document.createElement('a');
                         link.href = 'data:text/plain;base64,' + data.content;
-                        link.download = `warp-config-llimonix-${randomNumber}.conf`;
+                        link.download = `warp-llimonix-${randomNumber}.conf`;
                         link.click();
                     };
 
-                    button.textContent = `Скачать warp-config-llimonix-${randomNumber}.conf`;
+                    button.innerHTML = `Скачать warp-llimonix-${randomNumber}.conf`;
                     button.removeAttribute('onclick');
                     button.addEventListener('click', downloadFile);
                     downloadFile();
                 } else {
                     status.textContent = 'Ошибка: ' + data.message;
+                    button.innerHTML = 'Сгенерировать';
                 }
             } catch (error) {
                 status.textContent = 'Произошла ошибка при генерации.';
-            } finally {
-                // Восстанавливаем кнопку
-                button.disabled = false;
                 button.innerHTML = 'Сгенерировать';
+            } finally {
+                button.disabled = false;
             }
         }
         document.getElementById('telegramButton').onclick = function() {
