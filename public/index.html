@@ -78,6 +78,7 @@
             try {
                 // Отправляем запрос на генерацию конфига
                 const response = await fetch('/warp');
+                console.log(response)
                 const data = await response.json();
 
                 if (data.success) {
