@@ -60,8 +60,7 @@ async function generateWarpConfig() {
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
     const port = peer_endpoint.split(':').pop();
 
-    // Заменяем хост в endpoint на 162.159.193.5
-    peer_endpoint = '162.159.193.5';
+    peer_endpoint = peer_endpoint.replace(/^[^:]+/, '162.159.193.5');
 
     // Формируем конфиг
     const conf = `
@@ -69,9 +68,9 @@ async function generateWarpConfig() {
 PrivateKey = ${privKey}
 S1 = 0
 S2 = 0
-Jc = 120
-Jmin = 23
-Jmax = 911
+Jc = 4
+Jmin = 40
+Jmax = 70
 H1 = 1
 H2 = 2
 H3 = 3
@@ -82,7 +81,7 @@ DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 [Peer]
 PublicKey = ${peer_pub}
 AllowedIPs = 0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1
-Endpoint = ${peer_endpoint}:${port}
+Endpoint = ${peer_endpoint}
 `;
 
     // Возвращаем конфиг
