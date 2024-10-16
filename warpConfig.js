@@ -58,9 +58,6 @@ async function generateWarpConfig() {
     let peer_endpoint = warpResponse.result.config.peers[0].endpoint.host;
     const client_ipv4 = warpResponse.result.config.interface.addresses.v4;
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
-    const port = peer_endpoint.split(':').pop();
-
-    peer_endpoint = peer_endpoint.replace(/^[^:]+/, '162.159.193.5');
 
     // Формируем конфиг
     const conf = `
