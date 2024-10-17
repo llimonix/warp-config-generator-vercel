@@ -60,8 +60,7 @@ async function generateWarpConfig() {
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
 
     // Формируем конфиг
-    const conf = `
-[Interface]
+    const conf = `[Interface]
 PrivateKey = ${privKey}
 S1 = 0
 S2 = 0
@@ -78,8 +77,7 @@ DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 [Peer]
 PublicKey = ${peer_pub}
 AllowedIPs = 0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1
-Endpoint = ${peer_endpoint}
-`;
+Endpoint = ${peer_endpoint}`;
 
     // Возвращаем конфиг
     return conf;
