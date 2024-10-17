@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генерация конфигурации WARP</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/16994/16994881.png" type="image/x-icon">
     <style>
         body {
             display: flex;
@@ -84,11 +85,11 @@
                     const downloadFile = () => {
                         const link = document.createElement('a');
                         link.href = 'data:text/plain;base64,' + data.content;
-                        link.download = `warp-llimonix-${randomNumber}.conf`;
+                        link.download = `warp_llimonix_${randomNumber}.conf`;
                         link.click();
                     };
 
-                    button.innerHTML = `Скачать warp-llimonix-${randomNumber}.conf`;
+                    button.innerHTML = `Скачать warp_llimonix_${randomNumber}.conf`;
                     button.removeAttribute('onclick');
                     button.addEventListener('click', downloadFile);
                     downloadFile();
