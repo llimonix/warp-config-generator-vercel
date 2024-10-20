@@ -34,7 +34,7 @@ async function apiRequest(method, endpoint, body = null, token = null) {
     return response.json();
 }
 
-async function generateWarpConfig() {
+async function generateWarpConfig(isIOS) {
     const { privKey, pubKey } = generateKeys();
 
     // Регистрация устройства
@@ -55,9 +55,12 @@ async function generateWarpConfig() {
     const warpResponse = await apiRequest('PATCH', `reg/${id}`, { warp_enabled: true }, token);
 
     const peer_pub = warpResponse.result.config.peers[0].public_key;
-    let peer_endpoint = warpResponse.result.config.peers[0].endpoint.host;
+    const peer_endpoint = warpResponse.result.config.peers[0].endpoint.host;
     const client_ipv4 = warpResponse.result.config.interface.addresses.v4;
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
+
+    // Меняем AllowedIPs в зависимости от того, был ли выбран чекбокс
+    const allowedIPs = isIOS ? '0.0.0.0/0, ::/0' : '0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1';
 
     // Формируем конфиг
     const conf = `[Interface]
@@ -76,7 +79,7 @@ DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 
 [Peer]
 PublicKey = ${peer_pub}
-AllowedIPs = 0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1
+AllowedIPs = ${allowedIPs}
 Endpoint = ${peer_endpoint}`;
 
     // Возвращаем конфиг

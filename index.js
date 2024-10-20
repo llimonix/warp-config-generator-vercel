@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 
-// Подключаем статические файлы (для логотипа и CSS)
+// Подключаем статические файлы
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Главная страница
@@ -14,8 +14,10 @@ app.get('/', (req, res) => {
 
 // Маршрут для генерации конфига
 app.get('/warp', async (req, res) => {
+    const isIOS = req.query.ios === 'true'; // Получаем параметр ios из URL
+
     try {
-        const content = await getWarpConfigLink();
+        const content = await getWarpConfigLink(isIOS); // Передаем параметр в функцию
         if (content) {
             res.json({ success: true, content });
         } else {
