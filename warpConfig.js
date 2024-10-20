@@ -60,7 +60,6 @@ async function generateWarpConfig(isIOS) {
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
 
     // Меняем AllowedIPs в зависимости от того, был ли выбран чекбокс
-    console.log(isIOS)
     const allowedIPs = isIOS ? '0.0.0.0/0, ::/0' : '0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1';
 
     // Формируем конфиг
@@ -88,9 +87,9 @@ Endpoint = ${peer_endpoint}`;
 }
 
 // Основная функция для генерации ссылки на скачивание конфига
-async function getWarpConfigLink() {
+async function getWarpConfigLink(isIOS) {
     try {
-        const conf = await generateWarpConfig();
+        const conf = await generateWarpConfig(isIOS);
         const confBase64 = Buffer.from(conf).toString('base64');
         return `${confBase64}`;
     } catch (error) {
