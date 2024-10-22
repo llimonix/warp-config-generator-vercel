@@ -60,7 +60,7 @@ async function generateWarpConfig(isIOS) {
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
 
     // Меняем AllowedIPs в зависимости от того, был ли выбран чекбокс
-    const allowedIPs = isIOS ? '0.0.0.0/0, ::/0' : '0.0.0.0/1, 128.0.0.0/1, ::/1, 8000::/1';
+    const allowedIPs = isIOS ? '0.0.0.0/0, ::/0' : '0.0.0.0/0, 128.0.0.0/0, ::/0, 8000::/0';
 
     // Формируем конфиг
     const conf = `[Interface]
