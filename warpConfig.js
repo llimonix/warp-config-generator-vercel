@@ -34,7 +34,7 @@ async function apiRequest(method, endpoint, body = null, token = null) {
     return response.json();
 }
 
-async function generateWarpConfig(isIOS) {
+async function generateWarpConfig() {
     const { privKey, pubKey } = generateKeys();
 
     // Регистрация устройства
@@ -59,9 +59,6 @@ async function generateWarpConfig(isIOS) {
     const client_ipv4 = warpResponse.result.config.interface.addresses.v4;
     const client_ipv6 = warpResponse.result.config.interface.addresses.v6;
 
-    // Меняем AllowedIPs в зависимости от того, был ли выбран чекбокс
-    const allowedIPs = isIOS ? '0.0.0.0/0, ::/0' : '0.0.0.0/0, 128.0.0.0/0, ::/0, 8000::/0';
-
     // Формируем конфиг
     const conf = `[Interface]
 PrivateKey = ${privKey}
@@ -74,12 +71,13 @@ H1 = 1
 H2 = 2
 H3 = 3
 H4 = 4
+MTU = 1280
 Address = ${client_ipv4}, ${client_ipv6}
 DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 
 [Peer]
 PublicKey = ${peer_pub}
-AllowedIPs = ${allowedIPs}
+AllowedIPs = 0.0.0.0/0, ::/0
 Endpoint = ${peer_endpoint}`;
 
     // Возвращаем конфиг
@@ -87,9 +85,9 @@ Endpoint = ${peer_endpoint}`;
 }
 
 // Основная функция для генерации ссылки на скачивание конфига
-async function getWarpConfigLink(isIOS) {
+async function getWarpConfigLink() {
     try {
-        const conf = await generateWarpConfig(isIOS);
+        const conf = await generateWarpConfig();
         const confBase64 = Buffer.from(conf).toString('base64');
         return `${confBase64}`;
     } catch (error) {

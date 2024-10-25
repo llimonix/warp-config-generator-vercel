@@ -14,10 +14,8 @@ app.get('/', (req, res) => {
 
 // Маршрут для генерации конфига
 app.get('/warp', async (req, res) => {
-    const isIOS = req.query.ios === 'true'; // Получаем параметр ios из URL
-
     try {
-        const content = await getWarpConfigLink(isIOS); // Передаем параметр в функцию
+        const content = await getWarpConfigLink();
         if (content) {
             res.json({ success: true, content });
         } else {
