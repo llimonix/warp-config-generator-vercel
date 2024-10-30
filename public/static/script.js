@@ -20,8 +20,7 @@ async function generateConfig() {
             };
 
             button.innerHTML = `Скачать warp_llimonix_${randomNumber}.conf`;
-            button.removeAttribute('onclick');
-            button.addEventListener('click', downloadFile);
+            button.onclick = downloadFile;
             downloadFile();
         } else {
             status.textContent = 'Ошибка: ' + data.message;
