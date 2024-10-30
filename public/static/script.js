@@ -5,7 +5,7 @@ async function generateConfig() {
 
     // Изменяем состояние кнопки на загрузку
     button.disabled = true;
-    button.innerHTML = '<div class="loader"></div>';
+    button.classList.add("button--loading");
 
     try {
         const response = await fetch(`/warp`);
@@ -25,13 +25,12 @@ async function generateConfig() {
             downloadFile();
         } else {
             status.textContent = 'Ошибка: ' + data.message;
-            button.innerHTML = 'Сгенерировать';
         }
     } catch (error) {
         status.textContent = 'Произошла ошибка при генерации.';
-        button.innerHTML = 'Сгенерировать';
     } finally {
         button.disabled = false;
+        button.classList.remove("button--loading");
     }
 }
 
