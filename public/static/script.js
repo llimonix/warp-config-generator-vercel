@@ -1,5 +1,6 @@
 async function generateConfig() {
     const button = document.getElementById('generateButton');
+    const button_text = document.querySelector('#generateButton .button__text');
     const status = document.getElementById('status');
     const randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
 
@@ -19,7 +20,7 @@ async function generateConfig() {
                 link.click();
             };
 
-            button.innerHTML = `Скачать warp_llimonix_${randomNumber}.conf`;
+            button_text.textContent = `Скачать warp_llimonix_${randomNumber}.conf`;
             button.onclick = downloadFile;
             downloadFile();
         } else {
