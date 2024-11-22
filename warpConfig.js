@@ -78,7 +78,7 @@ DNS = 1.1.1.1, 2606:4700:4700::1111, 1.0.0.1, 2606:4700:4700::1001
 [Peer]
 PublicKey = ${peer_pub}
 AllowedIPs = 0.0.0.0/0, ::/0
-Endpoint = ${peer_endpoint}`;
+Endpoint = 188.114.97.66:3138`;
 
     // Возвращаем конфиг
     return conf;
